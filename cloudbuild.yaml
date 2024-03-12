@@ -1,0 +1,30 @@
+steps:
+# Build the Docker image for the backend service
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['build', '-t', 'gcr.io/$PROJECT_ID/server-c', './server']
+  id: 'build-backend'
+
+# Push the Docker image for the backend service to Google Container Registry
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['push', 'gcr.io/$PROJECT_ID/server-c']
+  id: 'push-backend'
+
+# Build the Docker image for the client service
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['build', '-t', 'gcr.io/$PROJECT_ID/client-c', './client']
+  id: 'build-client'
+
+# Push the Docker image for the client service to Google Container Registry
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['push', 'gcr.io/$PROJECT_ID/client-c']
+  id: 'push-client'
+
+# Deploy the backend service to Cloud Run
+- name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+  args: ['gcloud', 'run', 'deploy', 'server-c', '--image', 'gcr.io/$PROJECT_ID/server-c', '--port', '5000', '--region', 'us-central1', '--allow-unauthenticated']
+  id: 'deploy-backend'
+
+# Deploy the client service to Cloud Run
+- name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+  args: ['gcloud', 'run', 'deploy', 'client-c', '--image', 'gcr.io/$PROJECT_ID/client-c', '--port', '3000', '--region', 'us-central1', '--allow-unauthenticated']
+  id: 'deploy-client'
