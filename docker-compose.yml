@@ -11,7 +11,7 @@ services:  # Defines the different services (containers) that make up your appli
       - "3000:3000"  # Maps port 5173 on the host to port 5173 in the container.
 
   backend:  # The second service, named 'backend'.
-    container_name: backend-c  # Sets a custom name for the Docker container.
+    container_name: server-c  # Sets a custom name for the Docker container.
     build:
       context: ./server  # The build context for the backend service.
       dockerfile: Dockerfile  # The Dockerfile to use for the backend service.
